@@ -32,5 +32,19 @@ export const api_Routes = {
         getOne: (id) => (`${Host}/dresses/${id}`),
         update: (id) => (`${Host}/dresses/${id}`),
     },
+    specifications: {
+        view: `${Host}/specifications`,
+        add: `${Host}/specifications`,
+        bulkDelete: (id) => (`${Host}/specifications/${id}`),
+        getOne: (id) => (`${Host}/specifications/${id}`),
+        update: (id) => (`${Host}/specifications/${id}`),
+    },
+    specificationOptions: {
+        view: `${Host}/specificationOptions`,
+        add: `${Host}/specificationOptions`,
+        bulkDelete: (id) => (`${Host}/specificationOptions/${id}`),
+        getOne: (id) => (`${Host}/specificationOptions/${id}`),
+        update: (id) => (`${Host}/specificationOptions/${id}`),
+    },
     
 }

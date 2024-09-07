@@ -18,6 +18,13 @@ import AddUser from "./Component/Users/AddUser";
 import EditUser from "./Component/Users/EditUser";
 import Dresses from "./Component/Dresses/Dresses";
 
+import Specifications from "./Component/Specifications/Specifications";
+import AddSpecification from "./Component/Specifications/AddSpecification";
+import EditSpecification from "./Component/Specifications/EditSpecification";
+import SpecificationsOptions from "./Component/SpecificationsOptions/SpecificationsOptions";
+import AddSpecificationOption from "./Component/SpecificationsOptions/AddSpecificationOption";
+import EditSpecificationOption from "./Component/SpecificationsOptions/EditSpecificationOption";
+
 function AppContent () {
 
     const location = useLocation();
@@ -157,11 +164,66 @@ function AppContent () {
              <Route
                 path="/dresses"
                 element={
-                <ProtectedRoute requiredPermission="user.get">
+                <ProtectedRoute requiredPermission="dress.get">
                     <Dresses />
                 </ProtectedRoute>
                 }
             />
+             <Route
+                path="/specifications"
+                element={
+                <ProtectedRoute requiredPermission="specification.get">
+                    <Specifications />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/AddSpecification"
+                element={
+                <ProtectedRoute requiredPermission="specification.get">
+                    <AddSpecification />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/EditSpecification/:specid"
+                element={
+                <ProtectedRoute requiredPermission="specification.get">
+                    <EditSpecification />
+                </ProtectedRoute>
+                }
+            />
+
+            {/*  */}
+
+
+            <Route
+                path="/specificationOptions"
+                element={
+                <ProtectedRoute requiredPermission="specificationOption.get">
+                    <SpecificationsOptions />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/AddSpecificationOption"
+                element={
+                <ProtectedRoute requiredPermission="specificationOption.add">
+                    <AddSpecificationOption />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/EditSpecificationOption/:optionid"
+                element={
+                <ProtectedRoute requiredPermission="specificationOption.edit">
+                    <EditSpecificationOption />
+                </ProtectedRoute>
+                }
+            />
+
+
+
           </Routes>
         </main>
 

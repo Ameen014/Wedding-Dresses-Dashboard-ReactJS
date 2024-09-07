@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import TablePagination from '@mui/material/TablePagination';
 
-const Dresses = () => {
+const SpecificationsOptions = () => {
 
     const navigate = useNavigate()
     const { enqueueSnackbar } = useSnackbar();
@@ -27,14 +27,14 @@ const Dresses = () => {
     const [ totalItems, setTotalItems ] = useState(0)
     const [dress, setdress] = useState([])
 
-    const BaseApi = api_Routes.dresses.view
+    const BaseApi = api_Routes.specificationOptions.view
 
 
     useEffect(()=>{
         const controller = new AbortController()
         const signal = controller.signal
   
-        get_dress(signal)
+        get_Specifications(signal)
   
          return()=>{
           controller.abort()
@@ -42,7 +42,7 @@ const Dresses = () => {
   
         },[values_Filter,page,perPage])
 
-    const get_dress = async (signal) => {
+    const get_Specifications = async (signal) => {
 
         let url = BaseApi + '?1=1';
 
@@ -72,11 +72,9 @@ const Dresses = () => {
                 setdress(prev=>[...prev,{
                     id:elem.id,
                     name:elem.name,
-                    photo:elem.photo,
-                    quantity:elem.quantity,
-                    price:elem.rental_price,
-                    description:elem.description,
-                    availability:elem.availability === 1 ? "True" : "False",
+                    spec_name:elem.specification_name,
+                    added_price:elem.added_price,
+
                     action: (
                         <div>
                           <span onClick={() => handleOpenDialog(elem.id)} >
@@ -89,7 +87,7 @@ const Dresses = () => {
                             </svg>
                           </span>
 
-                          <span style={{paddingLeft:"15px"}} onClick={()=>{navigate(`/EditDress/${elem.id}`)}}>
+                          <span style={{paddingLeft:"15px"}} onClick={()=>{navigate(`/EditSpecificationOption/${elem.id}`)}}>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="edit-icon">
                             <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#141414" fill-opacity="0.6"/>
                             <path d="M8.50008 17.69C7.89008 17.69 7.33008 17.47 6.92008 17.07C6.43008 16.58 6.22008 15.87 6.33008 15.12L6.76008 12.11C6.84008 11.53 7.22008 10.78 7.63008 10.37L15.5101 2.49C17.5001 0.499998 19.5201 0.499998 21.5101 2.49C22.6001 3.58 23.0901 4.69 22.9901 5.8C22.9001 6.7 22.4201 7.58 21.5101 8.48L13.6301 16.36C13.2201 16.77 12.4701 17.15 11.8901 17.23L8.88008 17.66C8.75008 17.69 8.62008 17.69 8.50008 17.69ZM16.5701 3.55L8.69008 11.43C8.50008 11.62 8.28008 12.06 8.24008 12.32L7.81008 15.33C7.77008 15.62 7.83008 15.86 7.98008 16.01C8.13008 16.16 8.37008 16.22 8.66008 16.18L11.6701 15.75C11.9301 15.71 12.3801 15.49 12.5601 15.3L20.4401 7.42C21.0901 6.77 21.4301 6.19 21.4801 5.65C21.5401 5 21.2001 4.31 20.4401 3.54C18.8401 1.94 17.7401 2.39 16.5701 3.55Z" fill="#141414" fill-opacity="0.6"/>
@@ -137,7 +135,7 @@ const Dresses = () => {
     
     const handleDeleteConfirmed = async () => {
         const {response, message} = await Helper.Delete({
-          url:api_Routes.dresses.bulkDelete(recordIdToDelete),
+          url:api_Routes.specificationOptions.bulkDelete(recordIdToDelete),
           hasToken:true,
         })
         if(response){
@@ -145,7 +143,7 @@ const Dresses = () => {
             vertical: 'top',
             horizontal: 'right'
           }}) 
-          get_dress()
+          get_Specifications()
         }else{
           enqueueSnackbar(message,{variant:"error",anchorOrigin: {
             vertical: 'top',
@@ -160,7 +158,7 @@ const Dresses = () => {
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle sx={{color:"red"}}>Confirm Delete</DialogTitle>
           <DialogContent>
-            <Typography>Are you sure you want to delete this Dress?</Typography>
+            <Typography>Are you sure you want to delete this Specification Option?</Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancel</Button>
@@ -171,11 +169,11 @@ const Dresses = () => {
         <Container sx={{marginBottom:"20px"}}>
             <Grid container sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <Grid item>
-                  <Typography sx={{fontSize:"28px" , fontWeight:"600" , color:"#1e1b1b"}} >Dresses</Typography>
+                  <Typography sx={{fontSize:"28px" , fontWeight:"600" , color:"#1e1b1b"}} >Specifications Options</Typography>
                 </Grid>
                 <Grid item >
-                  <Button variant="contained" startIcon={<AddIcon />} sx={{backgroundColor:"#0A722E",fontSize:"13px",borderRadius:"7px",height:"38px",'&:hover': {  backgroundColor: "#0A722E"  }}} onClick={()=> {navigate('/AddDress')}}>
-                    Add Dresses
+                  <Button variant="contained" startIcon={<AddIcon />} sx={{backgroundColor:"#0A722E",fontSize:"13px",borderRadius:"7px",height:"38px",'&:hover': {  backgroundColor: "#0A722E"  }}} onClick={()=> {navigate('/AddSpecificationOption')}}>
+                    Add Specification Option
                   </Button>
                 </Grid>
             </Grid>
@@ -218,12 +216,9 @@ const Dresses = () => {
                                     <TableHead sx={{backgroundColor:"#0A722E !important", color:"white !important"}}>
                                         <TableRow>
                                             <TableCell> Id </TableCell>
-                                            <TableCell> Photo </TableCell>
-                                            <TableCell> Name </TableCell>
-                                            <TableCell> Quantity </TableCell>
-                                            <TableCell> Price </TableCell>
-                                            <TableCell> Description </TableCell>
-                                            <TableCell> Availability </TableCell>
+                                            <TableCell> Name </TableCell>    
+                                            <TableCell> Specification Name </TableCell>                                           
+                                            <TableCell> Added Price </TableCell>                                           
                                             <TableCell> Action </TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -231,12 +226,9 @@ const Dresses = () => {
                                         {dress.map((ad) => (
                                             <TableRow key={ad.id}>
                                                 <TableCell>{ad.id}</TableCell>
-                                                <TableCell><img style={{widht:"37px",height:"37px"}} src={ad.photo}/></TableCell>
                                                 <TableCell>{ad.name}</TableCell>
-                                                <TableCell>{ad.quantity}</TableCell>
-                                                <TableCell>{ad.price}</TableCell>
-                                                <TableCell>{ad.description}</TableCell>
-                                                <TableCell>{ad.availability}</TableCell>
+                                                <TableCell>{ad.spec_name}</TableCell>
+                                                <TableCell>{ad.added_price}</TableCell>
                                                 <TableCell>{ad.action}</TableCell>               
                                             </TableRow>
                                         ))}
@@ -268,4 +260,4 @@ const Dresses = () => {
     </>)
 
 }
-export default Dresses;
+export default SpecificationsOptions;
