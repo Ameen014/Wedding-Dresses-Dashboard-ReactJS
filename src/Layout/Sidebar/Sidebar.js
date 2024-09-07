@@ -7,6 +7,7 @@
     import Woman2Icon from '@mui/icons-material/Woman2';
     import CloseIcon from '@mui/icons-material/Close';
     import EventNoteIcon from '@mui/icons-material/EventNote';
+    import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
     
     const Sidebar = ({ isOpen , toggleSidebar }) => {
 
@@ -32,7 +33,8 @@
 
     const menuItems = [
             { path: '/dashboard', label: 'Dashboard', icon: <GridViewIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'setting.get' },
-            { path: '/admins', label: 'Admins', icon: <PersonIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'admin.get' },
+            { path: '/admins', label: 'Admins', icon: <AdminPanelSettingsIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'admin.get' },
+            { path: '/users', label: 'Users', icon: <PersonIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'user.get' },
             { path: '/Role', label: 'Roles', icon: <LockIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'role.get' },
             { path: '/dresses', label: 'Dresses', icon: <Woman2Icon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'dress.get' },
             { path: '/specifications', label: 'Specifications', icon: <Woman2Icon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'specification.get' },

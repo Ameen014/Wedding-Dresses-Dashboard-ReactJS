@@ -13,6 +13,9 @@ import AddAdmin from "./Component/Admins/AddAdmin";
 import EditAdmin from "./Component/Admins/EditAdmin";
 import Dashboard from "./Component/Dashboard/Dashboard";
 import NotAuthorized from "./Component/NotAuthorized";
+import Users from "./Component/Users/User";
+import AddUser from "./Component/Users/AddUser";
+import EditUser from "./Component/Users/EditUser";
 
 function AppContent () {
 
@@ -123,6 +126,30 @@ function AppContent () {
                 element={
                 <ProtectedRoute requiredPermission="admin.edit">
                     <EditAdmin />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/users"
+                element={
+                <ProtectedRoute requiredPermission="user.get">
+                    <Users />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/AddUser"
+                element={
+                <ProtectedRoute requiredPermission="user.add">
+                    <AddUser />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/EditUser/:userid"
+                element={
+                <ProtectedRoute requiredPermission="user.edit">
+                    <EditUser />
                 </ProtectedRoute>
                 }
             />
