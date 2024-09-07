@@ -17,7 +17,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';  
 import Typography from '@mui/material/Typography';  
 import Box from '@mui/material/Box';  
-import photo from "../assets/Logo.png"
+import photo from "../assets/dress.jpeg"
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -30,7 +30,7 @@ export default function Login() {
     const { login } = useAuth();
 
     useEffect(() => {
-        
+
         const contentElement = document.querySelector('.content');
        
             contentElement.style.paddingLeft = '0';
@@ -78,13 +78,13 @@ export default function Login() {
 
 
     return (  
-        <Container maxWidth="sm" sx={{ padding: '20px', marginTop: "50px" }}>
+        <Container maxWidth="sm" sx={{ marginTop: "50px" }}>
         <Paper elevation={8} sx={{ padding: '32px', textAlign: 'center' }}>
             <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <Stack spacing={2} alignItems="center">
                         <img src={photo} alt="Logo" style={{ width: "150px", height: "auto" }} />
-                        <Typography variant="h4" fontWeight="bold">
+                        <Typography variant="h5" fontWeight="bold">
                             Mary Wedding Dresses
                         </Typography>
                     </Stack>
@@ -93,7 +93,7 @@ export default function Login() {
                     <Typography variant="h5" gutterBottom>
                         Sign In
                     </Typography>
-                    <Box display="flex" flexDirection="column" gap={2}>
+                    <Box display="flex" flexDirection="column" gap={1}>
                         <TextField
                             fullWidth
                             label="Email"

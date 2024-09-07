@@ -1,6 +1,6 @@
     import React, { useState, useEffect } from 'react';
     import { Link, useLocation } from 'react-router-dom';
-    import logo from "../../assets/Logo.png";
+    import logo from "../../assets/dress.jpeg";
     import GridViewIcon from '@mui/icons-material/GridView';
     import PersonIcon from '@mui/icons-material/Person';
     import LockIcon from '@mui/icons-material/Lock';
@@ -54,7 +54,7 @@
                         </button> : ""
                     }
                     <div className='logo'>
-                        <img className='logosidebar' src={logo} alt="logo" />
+                        <h3 style={{color:"green",fontSize:"22px",fontWight:"600",letterSpacing:"1.8px"}}>Mary Dresses</h3>
                     </div>
                     <div className='menu--list'>
                         {filteredMenuItems.map(item => (
