@@ -25,12 +25,26 @@ export const api_Routes = {
         getOne: (id) => (`${Host}/admins/${id}`),
         update: (id) => (`${Host}/admins/${id}`),
     },
+    user: {
+        view: `${Host}/users`,
+        add: `${Host}/users`,
+        bulkDelete: (id) => (`${Host}/users/${id}`),
+        getOne: (id) => (`${Host}/users/${id}`),
+        update: (id) => (`${Host}/users/${id}`),
+    },
     dresses: {
         view: `${Host}/dresses`,
         add: `${Host}/dresses`,
         bulkDelete: (id) => (`${Host}/dresses/${id}`),
         getOne: (id) => (`${Host}/dresses/${id}`),
         update: (id) => (`${Host}/dresses/${id}`),
+    },
+    reservation: {
+        view: `${Host}/reservations`,
+        add: `${Host}/reservations`,
+        bulkDelete: (id) => (`${Host}/reservations/${id}`),
+        getOne: (id) => (`${Host}/reservations/${id}`),
+        update: (id) => (`${Host}/reservations/${id}`),
     },
     specifications: {
         view: `${Host}/specifications`,

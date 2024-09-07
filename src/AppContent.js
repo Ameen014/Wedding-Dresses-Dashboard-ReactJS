@@ -24,6 +24,9 @@ import EditSpecification from "./Component/Specifications/EditSpecification";
 import SpecificationsOptions from "./Component/SpecificationsOptions/SpecificationsOptions";
 import AddSpecificationOption from "./Component/SpecificationsOptions/AddSpecificationOption";
 import EditSpecificationOption from "./Component/SpecificationsOptions/EditSpecificationOption";
+import AddDress from "./Component/Dresses/AddDress";
+import Reservations from "./Component/Reservstions/Reservations";
+import EditReservation from "./Component/Reservstions/EditReservation";
 
 function AppContent () {
 
@@ -218,6 +221,31 @@ function AppContent () {
                 element={
                 <ProtectedRoute requiredPermission="specificationOption.edit">
                     <EditSpecificationOption />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/AddDress"
+                element={
+                <ProtectedRoute requiredPermission="specificationOption.get">
+                    <AddDress />
+                </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/reservations"
+                element={
+                <ProtectedRoute requiredPermission="specificationOption.get">
+                    <Reservations />
+                </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/EditReservation/:reservationid"
+                element={
+                <ProtectedRoute requiredPermission="specificationOption.get">
+                    <EditReservation />
                 </ProtectedRoute>
                 }
             />

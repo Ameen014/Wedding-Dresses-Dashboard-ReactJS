@@ -134,7 +134,7 @@ const AddUser = () => {
 
 
         const { response, message } = await Helper.Post({
-            url: api_Routes.admin.add,
+            url: api_Routes.user.add,
             data: form_data,
             hasToken: true
         });

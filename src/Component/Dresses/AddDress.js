@@ -1,5 +1,4 @@
-import React, { useState, useEffect, Fragment ,useRef} from "react";
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, Fragment , useRef} from "react";
 import { api_Routes } from "../../api_Route";
 import { Helper } from "../../Tools/Helper";
 import Container from '@mui/material/Container';
@@ -14,91 +13,83 @@ import AddIcon from '@mui/icons-material/Add';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import InputLabel from '@mui/material/InputLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { Switch } from '@mui/material';
 import { Select, MenuItem } from '@mui/material';
-import Files from 'react-files';
 import { Autocomplete } from '@mui/material';
 
-const EditUser = () => {
-    const { userid } = useParams();
+import Files from 'react-files';
+
+const AddDress = () => {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate()
-    const controllerRef = useRef(null)
     const [isLoadingDetiales, setIsLoadingDetailes] = useState(false)
-    const [page, setPage] = useState({})
     const [isLoading, setIsLoading] = useState(false)
-    const [langauges, setLangauges] = useState([])
-    const [role, setrole] = useState([])
-    const [isLoadingRoles, setIsLoadingRoles] = useState(false); // New state for role loading
+    const [spec, setspec] = useState([]);
+    const [option, setoption] = useState([]);
+    const controllerRef = useRef(null)
     const [formData, setFormData] = useState({
-        username: "",
-        role_id: "",
-        active: "",
-        photo: "",
-        email: "",
+        name:"",      
+        availability: 0,
+        quantity:0,
+        rental_price:0,
+        description:"",
+        specification_id:"",
+        options:[]
+        
     })
 
     useEffect(() => {
 
-        get_user()
+        get_specifications()
 
-    }, [])
+    }, []);
 
-    const get_user = async () => {
+    const get_specifications = async (keyword) => {
+        setIsLoading(true); // Start loading
 
         const { response, message } = await Helper.Get({
-            url: api_Routes.user.getOne(userid),
+            url: api_Routes.specifications.view,
+            data: { keywords: keyword },
             hasToken: true,
         })
         if (response) {
-
-            console.log(response.data)
-            setFormData({
-                username: response.data.username,
-                role_id: response.data.role.id,
-                active: response.data.active,
-                email: response.data.email,
-                photo: response.data.photo,
-            })
-            get_role(response.data.role.name)
-            setFiles(response.data.photo ? [{
-                preview: { type: 'image', url: response.data.photo }
-            }] : "")
-        }
-    }
-    const get_role = async (keyword) => {
-        setIsLoadingRoles(true); // Start loading
-
-        if(controllerRef.current){
-            controllerRef.current.abort()
-        }
-        controllerRef.current = new AbortController()
-        const signal = controllerRef.current.signal
-
-        const { response, message } = await Helper.Get_Abort({
-            url: api_Routes.role.view,
-            signal:signal,
-            data:{keywords:keyword},
-            hasToken: true,
-        })
-        if (response) {
-            setrole([])
+            setspec([])
             response.data.forEach(ele => {
-                setrole(prev => [...prev, {
+                setspec(prev => [...prev, {
                     label: ele.name,
                     value: ele.id
                 }])
             })
-            setIsLoadingRoles(false);
+            setIsLoading(false);
         } else {
             console.log(message);
+            setIsLoading(false);
         }
-       
+
+
+    }
+    const get_specificationsOption = async (value) => {
+        setIsLoading(true); // Start loading
+
+        const { response, message } = await Helper.Get_Abort({
+            url: api_Routes.specificationOptions.view + `?specification_id=${value}`,
+            hasToken: true,
+        })
+        if (response) {
+            setoption([])
+            response.data.forEach(ele => {
+                setoption(prev => [...prev, {
+                    label: ele.name,
+                    value: ele.id
+                }])
+            })
+            setIsLoading(false);
+        } else {
+            console.log(message);
+            setIsLoading(false);
+        }
+
 
     }
 
@@ -106,12 +97,43 @@ const EditUser = () => {
 
         setFormData(prev => ({ ...prev, [key]: value }));
 
+        if(key === "specification_id"){
+            get_specificationsOption(value)
+        }
+
     };
 
     const handleSubmit = async () => {
+        setIsLoadingDetailes(true)
 
-        setIsLoading(true);
+        const requiredFields = [
+           
+        ];
 
+        const missingFields = requiredFields.filter((field) => !formData[field]);
+
+        if (missingFields.length > 0 || !formData.photo) {
+            let errorMessage = "";
+
+            if (missingFields.length > 0) {
+                errorMessage += `Please fill in all required fields: ${missingFields.join(", ")}. `;
+            }
+
+            if (!formData.photo) {
+                errorMessage += `Please upload a photo.`;
+            }
+
+            enqueueSnackbar(errorMessage, {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "top",
+                    horizontal: "right",
+                },
+            });
+
+            setIsLoading(false);
+            return;
+        }
 
         setIsLoading(true);
 
@@ -119,35 +141,39 @@ const EditUser = () => {
         var updatedFormData = { ...formData };
         var valueTemp = ''
 
-
-
-
         Object.keys(updatedFormData).forEach((key) => {
-            if (key === "photo") {
-                // Append new photo file
-                if (updatedFormData.photo instanceof File) {
-                    form_data.append("file", updatedFormData.photo);
-                } 
+            if (key === "options"){
+                updatedFormData[key].forEach((op) => {
+                form_data.append("options[]", op);
+            });
             }
+            else if (key === "photo")
+                form_data.append("file", updatedFormData.photo);
             else
                 form_data.append(key, updatedFormData[key]);
         });
 
+
+        form_data.append("_method", "PUT");
+
+
+
         const { response, message } = await Helper.Post({
-            url: api_Routes.user.update(userid),
+            url: api_Routes.dresses.add,
             data: form_data,
             hasToken: true
         });
 
         if (response) {
             enqueueSnackbar(message, {
-                variant: "success", anchorOrigin: {
+                variant: "success",
+                anchorOrigin: {
                     vertical: 'top',
                     horizontal: 'right'
                 }
-            })
-            navigate(`/users`)
-            setIsLoading(false);
+            });
+            navigate(`/Dresses`);
+            setIsLoadingDetailes(false);
         } else {
             let errorMessage = '';
             if (typeof message === "string") {
@@ -162,7 +188,7 @@ const EditUser = () => {
                     horizontal: 'right'
                 }
             });
-            setIsLoading(false);
+            setIsLoadingDetailes(false);
         }
     };
 
@@ -190,12 +216,12 @@ const EditUser = () => {
             <Container sx={{ marginBottom: "20px" }}>
                 <Grid container sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                     <Grid item>
-                        <Typography sx={{ fontSize: "28px", fontWeight: "600", color: "#1e1b1b" }}>Edit User</Typography>
+                        <Typography sx={{ fontSize: "28px", fontWeight: "600", color: "#1e1b1b" }}>Add Dress</Typography>
                     </Grid>
                     <Grid item>
                         <Button
                             variant="contained"
-                            startIcon={isLoading ? <CircularProgress sx={{color:"white"}} size={22} /> : <AddIcon />}
+                            startIcon={isLoadingDetiales ? <CircularProgress sx={{color:"white"}} size={22} /> : <AddIcon />}
                             sx={{
                                 backgroundColor: "#0A722E",
                                 fontSize: "13px",
@@ -213,46 +239,82 @@ const EditUser = () => {
                 </Grid>
                 <Card>
                     <CardContent>
-                        <h3>Basic information <h5>( Leave the password space blank if you don't want to change it. )</h5> </h3>
+                        <h3>Basic information</h3>
                         <Box component="form" noValidate autoComplete="off">
-                            <Grid container spacing={4}>
+                            <Grid container spacing={2}>
+                               
                                 <Grid item xs={12} sm={4}>
-                                    <InputLabel className="inputlable">Username </InputLabel>
+                                    <InputLabel className="inputlable">Name</InputLabel>
                                     <TextField
-                                        label="username"
-                                        variant="outlined"
                                         sx={{ width: { xs: "100%", sm: "auto" } }}
-                                        value={formData.username}
-                                          size="small"
-                                        onChange={(e) => { handleChange("username", e.target.value) }}
+                                        label="name"
+                                        variant="outlined"
+                                        size="small"
+                                        value={formData.name}
+                                        onChange={(e) => { handleChange("name", e.target.value) }}
                                     />
                                 </Grid>
-
-
                                 <Grid item xs={12} sm={4}>
-                                    <InputLabel className="inputlable">Role</InputLabel>
+                                    <InputLabel className="inputlable">Quantity</InputLabel>
+                                    <TextField
+                                        type="number"
+                                        sx={{ width: { xs: "100%", sm: "auto" } }}
+                                        label="quantity"
+                                        variant="outlined"
+                                        size="small"
+                                        value={formData.quantity}
+                                        onChange={(e) => { handleChange("quantity", e.target.value) }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <InputLabel className="inputlable">Price</InputLabel>
+                                    <TextField
+                                        type="number"
+                                        sx={{ width: { xs: "100%", sm: "auto" } }}
+                                        label="price"
+                                        variant="outlined"
+                                        size="small"
+                                        value={formData.rental_price}
+                                        onChange={(e) => { handleChange("rental_price", e.target.value) }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                <InputLabel className="inputlable">Description</InputLabel>
+                                    <TextField
+                                        sx={{ width: { xs: "100%", sm: "auto" } }}
+                                        label="description"
+                                        variant="outlined"
+                                        size="small"
+                                        value={formData.description}
+                                        onChange={(e) => { handleChange("description", e.target.value) }}
+                                    />
+                                </Grid>
+                                
+                               
+                                <Grid item xs={12} sm={4}>
+                                    <InputLabel className="inputlable">Specifications</InputLabel>
                                     <FormControl sx={{ width: "100%" }}>
                                         <Autocomplete
-                                          size="small"
-                                            options={role}
+                                            options={spec}
+                                            size="small"
                                             getOptionLabel={(option) => option.label}
-                                            value={role.find((r) => r.value === formData.role_id) || null}
+                                            value={spec.find((r) => r.value === formData.specification_id) || null}
                                             onChange={(event, newValue) => {
-                                                handleChange("role_id", newValue ? newValue.value : '');
+                                                handleChange("specification_id", newValue ? newValue.value : '');
                                             }}
                                             onInputChange={(event, newInputValue) => {
-                                                get_role(newInputValue); // Fetch roles based on input
+                                                get_specifications(newInputValue); // Fetch roles based on input
                                             }}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
-                                                    label="role"
+                                                    label="specification"
                                                     sx={{ width: { xs: "100%", sm: "90%", md: "90%", lg: "65%" } }}
                                                     InputProps={{
                                                         ...params.InputProps,
                                                         endAdornment: (
                                                             <>
-                                                                {isLoadingRoles ? (
+                                                                {isLoading ? (
                                                                     <CircularProgress color="inherit" size={20} />
                                                                 ) : null}
                                                                 {params.InputProps.endAdornment}
@@ -264,47 +326,34 @@ const EditUser = () => {
                                         />
                                     </FormControl>
                                 </Grid>
-
                                 <Grid item xs={12} sm={4}>
-                                    <InputLabel className="inputlable">Email </InputLabel>
-                                    <TextField
-                                      size="small"
-                                        label="email"
-                                        variant="outlined"
-                                        sx={{ width: { xs: "100%", sm: "auto" } }}
-                                        value={formData.email}
-                                        onChange={(e) => { handleChange("email", e.target.value) }}
-                                    />
+                                    <Typography mb="10px">Specification Option</Typography>
+                                    <FormControl sx={{ width: "100%" }}>
+                                        <InputLabel className="demo-simple-select-label" sx={{ fontSize: "15px" }}>Options</InputLabel>
+                                        <Select
+                                          sx={{width:{xs:"100%",sm:"100%",md:"80%",   lg:"58%"} ,}}
+                                            multiple
+                                            size="small"
+                                            labelId="role-select-label"
+                                            value={formData.options}
+                                            disabled={!formData.specification_id}
+                                            label="option"
+                                            onChange={(e) => { handleChange("options", e.target.value) }}
+                                        >
+                                            {option.map((country) => (
+                                                <MenuItem key={country.value} value={country.value}>{country.label}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
 
-                                <Grid item xs={12} sm={4}>
-                                    <InputLabel className="inputlable" >Active</InputLabel>
-                                    <Switch sx={{ color: "#D80621" }} checked={formData.active == "1"} onChange={(e) => { handleChange("active", e.target.checked ? 1 : 0) }} />
-                                </Grid>
 
                                 <Grid item xs={12} sm={4}>
-                                    <InputLabel className="inputlable">Password</InputLabel>
-                                    <TextField
-                                      size="small"
-                                        label="password"
-                                        variant="outlined"
-                                        sx={{ width: { xs: "100%", sm: "auto" } }}
-                                        type="password"
-                                        value={formData.password}
-                                        onChange={(e) => { handleChange("password", e.target.value) }}
-                                    />
+                                    <InputLabel className="inputlable" >Availability</InputLabel>
+                                    <Switch sx={{ color: "#D80621" }} checked={formData.availability == "1"} onChange={(e) => { handleChange("availability", e.target.checked ? 1 : 0) }} />
                                 </Grid>
+                               
                                 <Grid item xs={12} sm={4}>
-                                    <InputLabel className="inputlable">Password Confirmation</InputLabel>
-                                    <TextField
-                                      size="small"
-                                        label="password confirmation"
-                                        variant="outlined"
-                                        sx={{ width: { xs: "100%", sm: "auto" } }}
-                                        type="password"
-                                        value={formData.password_confirmation}
-                                        onChange={(e) => { handleChange("password_confirmation", e.target.value) }}
-                                    />
                                 </Grid>
                             </Grid>
                         </Box>
@@ -333,7 +382,7 @@ const EditUser = () => {
                                                 ? <div style={{ textAlign: "center" }}>
                                                     {files.map((file, index) =>
                                                         <div key={index}>
-                                                            <img width="280px" height="150px" alt="img" src={`${file.preview.url}`} />
+                                                            <img width="400px" height="200px" alt="img" src={`${file.preview.url}`} />
                                                         </div>
                                                     )}
                                                 </div>
@@ -361,4 +410,4 @@ const EditUser = () => {
 
 
 }
-export default EditUser
+export default AddDress

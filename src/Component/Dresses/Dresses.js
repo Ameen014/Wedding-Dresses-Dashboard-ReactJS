@@ -175,7 +175,7 @@ const Dresses = () => {
                 </Grid>
                 <Grid item >
                   <Button variant="contained" startIcon={<AddIcon />} sx={{backgroundColor:"#0A722E",fontSize:"13px",borderRadius:"7px",height:"38px",'&:hover': {  backgroundColor: "#0A722E"  }}} onClick={()=> {navigate('/AddDress')}}>
-                    Add Dresses
+                    Add Dress
                   </Button>
                 </Grid>
             </Grid>
