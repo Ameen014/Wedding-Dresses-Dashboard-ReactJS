@@ -27,7 +27,7 @@ const Dresses = () => {
     const [ totalItems, setTotalItems ] = useState(0)
     const [dress, setdress] = useState([])
 
-    const BaseApi = api_Routes.admin.view
+    const BaseApi = api_Routes.dresses.view
 
 
     useEffect(()=>{
@@ -76,7 +76,7 @@ const Dresses = () => {
                     quantity:elem.quantity,
                     price:elem.rental_price,
                     description:elem.description,
-                    availability:elem.availability === 1 ? "Ture" : "False",
+                    availability:elem.availability === 1 ? "True" : "False",
                     action: (
                         <div>
                           <span onClick={() => handleOpenDialog(elem.id)} >
@@ -137,7 +137,7 @@ const Dresses = () => {
     
     const handleDeleteConfirmed = async () => {
         const {response, message} = await Helper.Delete({
-          url:api_Routes.admin.bulkDelete(recordIdToDelete),
+          url:api_Routes.dresses.bulkDelete(recordIdToDelete),
           hasToken:true,
         })
         if(response){
@@ -145,7 +145,7 @@ const Dresses = () => {
             vertical: 'top',
             horizontal: 'right'
           }}) 
-          get_user()
+          get_dress()
         }else{
           enqueueSnackbar(message,{variant:"error",anchorOrigin: {
             vertical: 'top',
@@ -160,7 +160,7 @@ const Dresses = () => {
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle sx={{color:"red"}}>Confirm Delete</DialogTitle>
           <DialogContent>
-            <Typography>Are you sure you want to delete this User?</Typography>
+            <Typography>Are you sure you want to delete this Dress?</Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancel</Button>
@@ -171,11 +171,11 @@ const Dresses = () => {
         <Container sx={{marginBottom:"20px"}}>
             <Grid container sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <Grid item>
-                  <Typography sx={{fontSize:"28px" , fontWeight:"600" , color:"#1e1b1b"}} >Users</Typography>
+                  <Typography sx={{fontSize:"28px" , fontWeight:"600" , color:"#1e1b1b"}} >Dresses</Typography>
                 </Grid>
                 <Grid item >
-                  <Button variant="contained" startIcon={<AddIcon />} sx={{backgroundColor:"#0A722E",fontSize:"13px",borderRadius:"7px",height:"38px",'&:hover': {  backgroundColor: "#0A722E"  }}} onClick={()=> {navigate('/AddUser')}}>
-                    Add User
+                  <Button variant="contained" startIcon={<AddIcon />} sx={{backgroundColor:"#0A722E",fontSize:"13px",borderRadius:"7px",height:"38px",'&:hover': {  backgroundColor: "#0A722E"  }}} onClick={()=> {navigate('/AddDresses')}}>
+                    Add Dresses
                   </Button>
                 </Grid>
             </Grid>
@@ -219,9 +219,11 @@ const Dresses = () => {
                                         <TableRow>
                                             <TableCell> Id </TableCell>
                                             <TableCell> Photo </TableCell>
-                                            <TableCell> UserName </TableCell>
-                                            <TableCell> Email </TableCell>
-                                            <TableCell> Active </TableCell>
+                                            <TableCell> Name </TableCell>
+                                            <TableCell> Quantity </TableCell>
+                                            <TableCell> Price </TableCell>
+                                            <TableCell> Description </TableCell>
+                                            <TableCell> Availability </TableCell>
                                             <TableCell> Action </TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -230,9 +232,11 @@ const Dresses = () => {
                                             <TableRow key={ad.id}>
                                                 <TableCell>{ad.id}</TableCell>
                                                 <TableCell><img style={{widht:"37px",height:"37px"}} src={ad.photo}/></TableCell>
-                                                <TableCell>{ad.username}</TableCell>
-                                                <TableCell>{ad.email}</TableCell>
-                                                <TableCell>{ad.active}</TableCell>
+                                                <TableCell>{ad.name}</TableCell>
+                                                <TableCell>{ad.quantity}</TableCell>
+                                                <TableCell>{ad.price}</TableCell>
+                                                <TableCell>{ad.description}</TableCell>
+                                                <TableCell>{ad.availability}</TableCell>
                                                 <TableCell>{ad.action}</TableCell>               
                                             </TableRow>
                                         ))}

@@ -32,7 +32,7 @@
 
 
     const menuItems = [
-            { path: '/dashboard', label: 'Dashboard', icon: <GridViewIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'setting.get' },
+            { path: '/dashboard', label: 'Dashboard', icon: <GridViewIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'admin.get' },
             { path: '/admins', label: 'Admins', icon: <AdminPanelSettingsIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'admin.get' },
             { path: '/users', label: 'Users', icon: <PersonIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'user.get' },
             { path: '/Role', label: 'Roles', icon: <LockIcon className='icon' sx={{ fontSize: "22px", marginRight: "9px" }} />, permission: 'role.get' },

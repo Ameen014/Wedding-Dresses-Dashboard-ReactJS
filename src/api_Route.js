@@ -1,4 +1,4 @@
-const Host = "/api"
+const Host = "https://maryapi.laimonah-scc.com/api"
 
 export const api_Routes = {
     auth: {
@@ -25,12 +25,12 @@ export const api_Routes = {
         getOne: (id) => (`${Host}/admins/${id}`),
         update: (id) => (`${Host}/admins/${id}`),
     },
-    product: {
-        view: `${Host}/products`,
-        add: `${Host}/products`,
-        bulkDelete: (id) => (`${Host}/products/${id}`),
-        getOne: (id) => (`${Host}/products/${id}`),
-        update: (id) => (`${Host}/products/${id}`),
+    dresses: {
+        view: `${Host}/dresses`,
+        add: `${Host}/dresses`,
+        bulkDelete: (id) => (`${Host}/dresses/${id}`),
+        getOne: (id) => (`${Host}/dresses/${id}`),
+        update: (id) => (`${Host}/dresses/${id}`),
     },
     
 }

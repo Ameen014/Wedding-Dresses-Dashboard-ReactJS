@@ -16,6 +16,7 @@ import NotAuthorized from "./Component/NotAuthorized";
 import Users from "./Component/Users/User";
 import AddUser from "./Component/Users/AddUser";
 import EditUser from "./Component/Users/EditUser";
+import Dresses from "./Component/Dresses/Dresses";
 
 function AppContent () {
 
@@ -55,7 +56,7 @@ function AppContent () {
             <Route
                 path="/"
                 element={
-                <ProtectedRoute requiredPermission="setting.get">
+                <ProtectedRoute requiredPermission="admin.get">
                     <Dashboard/>
                 </ProtectedRoute>
                 }
@@ -63,7 +64,7 @@ function AppContent () {
             <Route
                 path="/dashboard"
                 element={
-                <ProtectedRoute requiredPermission="setting.get">
+                <ProtectedRoute requiredPermission="admin.get">
                     <Dashboard/>
                 </ProtectedRoute>
                 }
@@ -150,6 +151,14 @@ function AppContent () {
                 element={
                 <ProtectedRoute requiredPermission="user.edit">
                     <EditUser />
+                </ProtectedRoute>
+                }
+            />
+             <Route
+                path="/dresses"
+                element={
+                <ProtectedRoute requiredPermission="user.get">
+                    <Dresses />
                 </ProtectedRoute>
                 }
             />
